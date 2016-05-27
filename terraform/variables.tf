@@ -1,10 +1,3 @@
-variable "access_key" {
-  type = "string"
-}
-
-variable "secret_key" {
-  type = "string"
-}
 
 variable "master_count" {
   type    = "string"
