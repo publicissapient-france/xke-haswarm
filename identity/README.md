@@ -27,7 +27,7 @@ $ docker run -d -p 8080:8080 identity
 Run the application with a specific name
 
 ```shell
-$ docker run -d -e NAME="Jean-Louis Rigau" -p 8080:8080 identity
+$ docker run -d -e NAME=Unicorn -p 8080:8080 identity
 ```
 
 Run the application with a specific filename
@@ -35,16 +35,17 @@ Run the application with a specific filename
 **Note** The corresponding file must be present in the `static/img`directory
 
 ```shell
-$ docker run -d -e NAME="Jean-Louis Rigau" -e FILENAME=jlrigau.jpg \
+$ docker run -d -e NAME=Unicorn -e FILENAME=unicorn.jpg \
 				-p 8080:8080 identity
 ```
 
 Run the application by indicating the url of the image to use
 
-**Note** If the image is not of `PNG` type, you have to indicate a specific filename according to the type
+**Note** If the downloaded image has a different filename from `identity.png`,
+you have to indicate a specific filename according to the file
 
 ```shell
-$ docker run -d -e NAME="Jean-Louis Rigau" -e FILENAME=identity.jpg \
-				-e URL=https://twitter.com/jlrigau/profile_image?size=original \
+$ docker run -d -e NAME="Unicorn" -e FILENAME=unicorn.jpeg \
+				-e URL=https://index.co/uploads/lists/a981c586ee454b2f0210d64d013870dab46332c8.jpeg \
 				-p 8080:8080 identity
 ```
