@@ -8,13 +8,13 @@ import (
 	"io"
 )
 
-type Id struct {
+type Identity struct {
 	Name     string
 	Filename string
 	Hostname string
 }
 
-var templates = template.Must(template.ParseFiles("id.html"))
+var templates = template.Must(template.ParseFiles("identity.html"))
 
 func getImage(url string, filename string) {
 	response, e := http.Get(url)
@@ -37,7 +37,7 @@ func getImage(url string, filename string) {
 	file.Close()
 }
 
-func loadId() (*Id, error) {
+func loadIdentity() (*Identity, error) {
 	name := os.Getenv("NAME")
 	if len(name) == 0 {
 		name = "N/A"
@@ -45,7 +45,7 @@ func loadId() (*Id, error) {
 
 	filename := os.Getenv("FILENAME")
 	if len(filename) == 0 {
-		filename = "id.png"
+		filename = "identity.png"
 	}
 
 	url := os.Getenv("URL")
@@ -58,16 +58,16 @@ func loadId() (*Id, error) {
 		return nil, err
 	}
 
-	return &Id{Name: name, Filename: filename, Hostname: hostname}, nil
+	return &Identity{Name: name, Filename: filename, Hostname: hostname}, nil
 }
 
-func idHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := loadId()
+func identityHandler(w http.ResponseWriter, r *http.Request) {
+	identity, err := loadIdentity()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	err = templates.ExecuteTemplate(w, "id.html", id)
+	err = templates.ExecuteTemplate(w, "identity.html", identity)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -78,7 +78,7 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", idHandler)
+	http.HandleFunc("/", identityHandler)
 	http.HandleFunc("/static/", staticHandler)
 
 	http.ListenAndServe(":8080", nil)
