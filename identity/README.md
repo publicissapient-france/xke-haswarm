@@ -32,7 +32,7 @@ $ docker run -d -e NAME=Unicorn -p 8080:8080 identity
 
 Run the application with a specific filename
 
-**Note** The corresponding file must be present in the `static/img`directory
+**Note** The corresponding file must be present in the `static/img` directory
 
 ```shell
 $ docker run -d -e NAME=Unicorn -e FILENAME=unicorn.jpg \
