@@ -1,55 +1,59 @@
 provider "aws" {
-  region     = "${var.aws_region}"
+  region = "${var.aws_region}"
+}
+
+resource "aws_subnet" "default" {
+  vpc_id = "${var.vpc_id}"
+  cidr_block = "${var.private_subnet}"
+  map_public_ip_on_launch = "true"
+  tags {
+    Name = "${var.project} subnet"
+    Project = "${var.project}"
+  }
 }
 
 # Security group
-resource "aws_security_group" "default" {
-  name        = "${var.project}-sg"
-  description = "${var.project} security group"
-
-  # SSH access from anywhere
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-}
 
 
-
-resource "aws_key_pair" "deployer" {
-  key_name   = "${var.key_name}"
+resource "aws_key_pair" "default" {
+  key_name = "${var.key_name}"
   public_key = "${file("${var.key_name}.pub")}"
 }
 
+
 resource "aws_instance" "master" {
-  count         = "${var.master_count}"
-  key_name      = "${var.key_name}"
-  ami           = "${lookup(var.aws_amis, var.aws_region)}"
-  instance_type = "m3.large"
+  count = "${var.master_count}"
+  key_name = "${var.key_name}"
+  ami = "${lookup(var.aws_amis, var.aws_region)}"
+  instance_type = "t2.medium"
+  subnet_id = "${aws_subnet.default.id}"
+
+  security_groups = [
+    "${aws_security_group.default.id}",
+    "${aws_security_group.master.id}"
+  ]
 
   tags {
-    Name    = "${var.project}-master-${count.index + 1}"
+    Name = "${var.project}-master-${count.index + 1}"
     Project = "${var.project}"
-    Owner    = "tauffredou@xebia.fr"
+    Owner = "tauffredou@xebia.fr"
   }
 
-  security_groups = ["${aws_security_group.default.name}"]
 }
 
 resource "aws_instance" "node" {
-  count         = "${var.node_count}"
-  key_name      = "${var.key_name}"
-  ami           = "${lookup(var.aws_amis, var.aws_region)}"
-  instance_type = "m3.large"
+  count = "${var.node_count}"
+  key_name = "${var.key_name}"
+  ami = "${lookup(var.aws_amis, var.aws_region)}"
+  instance_type = "t2.medium"
+  security_groups = [
+    "${aws_security_group.default.id}"]
+  subnet_id = "${aws_subnet.default.id}"
 
   tags {
-    Name    = "${var.project}-node-${count.index + 1}"
+    Name = "${var.project}-node-${count.index + 1}"
     Project = "${var.project}"
-    Owner    = "tauffredou@xebia.fr"
+    Owner = "tauffredou@xebia.fr"
   }
 
-  security_groups = ["${aws_security_group.default.name}"]
 }
