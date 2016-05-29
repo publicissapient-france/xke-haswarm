@@ -7,23 +7,34 @@ import (
 )
 
 type Id struct {
+	Name     string
 	Filename string
 	Hostname string
 }
 
 var templates = template.Must(template.ParseFiles("id.html"))
 
-func loadId(filename string) (*Id, error) {
+func loadId() (*Id, error) {
+	name := os.Getenv("NAME")
+	if len(name) == 0 {
+		name = "N/A"
+	}
+
+	filename := os.Getenv("FILENAME")
+	if len(filename) == 0 {
+		filename = "not_available.png"
+	}
+
 	hostname, err := os.Hostname()
 	if err != nil {
 		return nil, err
 	}
 
-	return &Id{Filename: filename, Hostname: hostname}, nil
+	return &Id{Name: name, Filename: filename, Hostname: hostname}, nil
 }
 
 func idHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := loadId("not_available.png")
+	id, err := loadId()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

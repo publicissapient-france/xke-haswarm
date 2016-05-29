@@ -17,5 +17,5 @@ $ docker build -t trombi trombi
 ## Run application
 
 ```shell
-$ docker run -d -p 8080:8080 trombi
+$ docker run -d -e NAME=jlrigau -e FILENAME=jlrigau.jpg -p 8080:8080 trombi
 ```
