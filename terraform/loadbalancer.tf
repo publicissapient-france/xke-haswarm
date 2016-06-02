@@ -9,6 +9,28 @@ resource "aws_security_group" "lb-admin" {
 
 }
 
+resource "aws_security_group_rule" "allow_lb_swarm" {
+  type = "ingress"
+  from_port = 0
+  to_port = 0
+  protocol = "-1"
+  cidr_blocks = [
+    "0.0.0.0/0"]
+  security_group_id = "${aws_security_group.lb-admin.id}"
+  //    source_security_group_id = "${aws_elb.admin.source_security_group_id}"
+}
+
+resource "aws_security_group_rule" "lb_swarm_out" {
+  type = "egress"
+  from_port = 0
+  to_port = 0
+  protocol = "-1"
+  cidr_blocks = [
+    "0.0.0.0/0"]
+  security_group_id = "${aws_security_group.lb-admin.id}"
+  //  source_security_group_id = "${aws_elb.admin.source_security_group_id}"
+}
+
 resource "aws_elb" "admin" {
   name = "${var.project}-lb-admin"
   # The same availability zone as our instance
@@ -26,6 +48,8 @@ resource "aws_elb" "admin" {
     "${aws_instance.master.*.id}"]
 }
 
+
+
 resource "aws_elb" "https" {
   name = "${var.project}-lb-https"
   # The same availability zone as our instance
@@ -39,4 +63,12 @@ resource "aws_elb" "https" {
   }
   instances = [
     "${aws_instance.master.*.id}"]
+}
+
+resource "aws_route53_record" "lb-record" {
+    name = "swarm.aws.xebiatechevent.info"
+    zone_id = "Z28O5PDK1WPCSR"
+    type = "CNAME"
+    records = ["${aws_elb.admin.dns_name}"]
+    ttl = "1"
 }

@@ -10,6 +10,23 @@ resource "aws_security_group" "default" {
   }
 
   ingress {
+    from_port = 3375
+    to_port = 3375
+    protocol = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"]
+  }
+
+
+  ingress {
+    from_port = 3375
+    to_port = 3375
+    protocol = "udp"
+    cidr_blocks = [
+      "0.0.0.0/0"]
+  }
+
+  ingress {
     from_port = 0
     to_port = 0
     protocol = "icmp"
@@ -46,11 +63,12 @@ resource "aws_security_group" "master" {
 
 resource "aws_security_group_rule" "allow_swarm" {
   type = "ingress"
-  from_port = 3375
-  to_port = 3375
+  from_port = 0
+  to_port = 0
   protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.master.id}"
-  source_security_group_id = "${aws_elb.admin.source_security_group_id}"
+//  source_security_group_id = "${aws_elb.admin.source_security_group_id}"
 }
 
 //resource "aws_security_group_rule" "allow_ssh" {
