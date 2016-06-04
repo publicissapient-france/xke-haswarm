@@ -1,7 +1,10 @@
 @import '~open-sans-fontface/open-sans.less';
+@import "./fonts/digital-7/digital-7.less";
 
 @primary-color: rgb(51, 51, 153);
-html{
+@gauge-color: rgb(164, 185, 127);
+
+html {
   background-color: rgb(245, 245, 245);
   font-family: "Open Sans";
 }
@@ -23,20 +26,22 @@ html{
     }
 
     .counter {
+      font-family: "Digital-7";
+      color: #000;
       @size: 70px;
-      position: absolute;
-      top: @size/10;
-      left: @size/10;
-      font-family: "Open Sans";
-      font-size: 1.6em;
-      border-radius: 10%;
-      background-color: @primary-color;
-      color: white;
-      height: @size;
-      width: @size;
+      //background-color: #000;
       text-align: center;
-      line-height: @size;
-      box-shadow: 0px 0px @size/10 @size/20 rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      //line-height: @size;
+      //box-shadow: 0px 0px @size/10 @size/20 rgba(0, 0, 0, 0.5);
+
+      .value {
+        font-size: 3em;
+      }
+
+      .unit {
+        font-size: 0.8em;
+      }
     }
 
     .name {

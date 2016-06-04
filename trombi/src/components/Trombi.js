@@ -7,14 +7,14 @@ class Trombi extends React.Component {
         const {services} = this.props;
         return <div className="trombi">
             {
-                Object.keys(services).map(k => <Service key={k} {...services[k]} />)
+                services.map(s => <Service key={s.name} {...s} />)
             }
         </div>
     }
 }
 
 Trombi.propTypes = {
-    services: PropTypes.object.isRequired
+    services: PropTypes.array.isRequired
 };
 
 export default Trombi;

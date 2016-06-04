@@ -3,9 +3,9 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
+    // devtool: 'cheap-module-eval-source-map',
     entry: [
-        'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
-        'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+        // 'webpack-hot-middleware/client',
         "./src/app.js"],
     output: {
         path: 'dist',

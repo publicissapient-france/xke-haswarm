@@ -2,12 +2,11 @@ import React from 'react'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 import MonitorTrombi from './containers/MonitorTrombi'
-import reducer from './reducers'
-import createLogger from 'redux-logger';
-
-import {hitService} from './actions'
+// import createLogger from 'redux-logger';
+import configureStore from './store/configureStore';
+import {hitService, ringTick} from './actions'
 // import SockJS from 'sockjs-client'
 // import Stomp from 'stompjs'
 // require ('bootstrap/less/bootstrap.less');
@@ -15,44 +14,51 @@ import {hitService} from './actions'
 // require("font-awesome-webpack");
 
 require("./trombi.less");
-const logger = createLogger();
-let store = createStore(
-    reducer,
-    applyMiddleware(thunk, logger)
-);
 
 
-store.dispatch(hitService("jlrigau"));
+// let store = createStore(
+//     reducer,
+//     applyMiddleware(thunk, logger)
+// );
 
-Window["test"] = function () {
-    store.dispatch(hitService("pouet"));
+const initialState = {
+    ringOffset: 0,
+    services: {
+        tauffredou: {
+            name: "Thomas Auffredou",
+            url: "http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Thomas-Auffredou-Xebia-09.58.25.png",
+            countBuffer: 0,
+            countRing: [0]
+        },
+        jlrigau: {
+            name: "Jean-Louis Rigau",
+            url: "http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png",
+            countBuffer: 0,
+            countRing: [0]
+        }
+    }
 };
-// var socket = new SockJS('/stomp');
-//
-// var stompClient;
-//
-// var stompHandler = function (frame) {
-//     stompClient.subscribe("/topic/CHECKSUITE_COMPLETE", function (data) {
-//         var message = JSON.parse(data.body);
-//         console.log(message);
-//         store.dispatch(projectRunComplete(message.project));
-//     });
-//     stompClient.subscribe("/topic/RESPONSE", function (data) {
-//         console.log(data.body)
-//     });
-// };
-//
-// var stompFallback = function (error) {
-//     console.log('STOMP: ' + error);
-//     setTimeout(stompConnect, 10000);
-//     console.log('STOMP: Reconecting in 10 seconds');
-// };
-//
-// function stompConnect() {
-//     stompClient = Stomp.over(socket);
-//     stompClient.connect({}, stompHandler, stompFallback);
-// }
-// stompConnect();
+
+let store = configureStore(initialState);
+
+
+setInterval(() => store.dispatch(ringTick()), 100);
+
+var conn;
+
+function configureWebsocket() {
+    conn = new WebSocket("ws://localhost:8082/ws");
+    conn.onclose = () => setTimeout(configureWebsocket, 1000);
+    conn.onopen = () => console.log('Connected');
+
+    conn.onmessage = function (evt) {
+        event = JSON.parse(evt.data);
+        store.dispatch(hitService(event.service));
+    };
+}
+
+configureWebsocket();
+
 render(
     <Provider store={store}>
         <MonitorTrombi/>
