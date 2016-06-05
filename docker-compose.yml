@@ -6,3 +6,10 @@ services:
     ports:
       - 6379:6379
 
+  monitor:
+    image: tauffredou/pcd-monitor
+    environment:
+    - REDIS_HOST=redis
+    ports:
+    - 8080:8082
+

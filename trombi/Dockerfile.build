@@ -1,0 +1,9 @@
+FROM node
+WORKDIR /app
+COPY package.json /app/package.json
+RUN npm install
+RUN npm install -g webpack webpack-dev-server
+
+VOLUME /app
+
+EXPOSE 3000

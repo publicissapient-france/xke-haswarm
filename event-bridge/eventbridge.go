@@ -21,7 +21,9 @@ var (
 	upgrader = &websocket.Upgrader{
 		ReadBufferSize: 1024,
 		WriteBufferSize: 1024,
-		CheckOrigin: func(r *http.Request) bool { return true },
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
 	}
 )
 
@@ -40,14 +42,8 @@ type ServiceHitEvent struct {
 	Name string `json:"name"`
 }
 
-//func broadcast(event *interface{}) {
-//	log.Printf("broadcast: %s", event)
-//	for c := range connections {
-//		c.WriteJSON(event)
-//	}
-//}
-
 func staticHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("Handle %s\n", r.URL.Path[1:])
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
@@ -79,7 +75,8 @@ func main() {
 		}
 	}()
 
-	http.HandleFunc("/static/", staticHandler)
+	fs := http.FileServer(http.Dir("static"))
 	http.HandleFunc("/ws", wsHandler)
+	http.Handle("/", fs)
 	http.ListenAndServe(":8082", nil)
 }

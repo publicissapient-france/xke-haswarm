@@ -47,7 +47,8 @@ setInterval(() => store.dispatch(ringTick()), 100);
 var conn;
 
 function configureWebsocket() {
-    conn = new WebSocket("ws://localhost:8082/ws");
+    var url = "ws://" + window.location.host  + "/ws";
+    conn = new WebSocket(url);
     conn.onclose = () => setTimeout(configureWebsocket, 1000);
     conn.onopen = () => console.log('Connected');
 
