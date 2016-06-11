@@ -15,6 +15,8 @@ function serviceReducer(state = defaultService, action, ringOffset) {
     switch (action.type) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
+                url: "http://" + action.hostname + "/static/img/" + action.filename,
+                name: action.name,
                 countBuffer: state.countBuffer + 1
             });
         case actions.RING_TICK:
@@ -35,7 +37,7 @@ function rootReducer(state, action) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
                 services: Object.assign({}, state.services, {
-                    [action.service]: serviceReducer(state.services[action.service], action, state.ringOffset)
+                    [action.name]: serviceReducer(state.services[action.service], action, state.ringOffset)
                 })
             });
         case actions.RING_TICK:

@@ -1,7 +1,19 @@
 # xke-haswarm
 
-```
-export DOCKER_HOST=tcp://swarm.aws.xebiatechevent.info:3375
+## Package Docker image
 
-docker info
 ```
+./make.sh build-chain
+```
+
+## Start on localhost
+
+```
+IP=127.0.0.1 docker-compose up -d
+```
+
+## Services
+
+We use xip.io to handle testing dns
+
+- Monitor: http://monitor.127.0.0.1.xip.io

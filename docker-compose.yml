@@ -10,6 +10,90 @@ services:
     image: tauffredou/pcd-monitor
     environment:
     - REDIS_HOST=redis
+    labels:
+      - "interlock.hostname=monitor"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
     ports:
-    - 8080:8082
+      - 8082:8082
 
+  unicorn:
+    image: identity
+    hostname: unicorn.${IP}.xip.io
+    environment:
+        NAME: Unicorn
+        FILENAME: unicorn.jpg
+
+    labels:
+      - "interlock.hostname=unicorn"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+    ports:
+      - 8080
+
+  jlrigau:
+    image: identity
+    hostname: jlrigau.${IP}.xip.io
+    environment:
+        NAME: jlrigau
+        FILENAME: jlrigau.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png
+    labels:
+      - "interlock.hostname=jlrigau"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+    ports:
+      - 8080
+
+  jsimon:
+    image: identity
+    hostname: jsimon.${IP}.xip.io
+    environment:
+        NAME: jsimon
+        FILENAME: jsimon.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Julien-Simon-AWS.png
+    labels:
+      - "interlock.hostname=jsimon"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+    ports:
+      - 8080
+
+  interlock:
+      image: ehazlett/interlock:master
+      command: -D run -c /etc/interlock/config.toml
+      tty: true
+      ports:
+          - 8080
+      environment:
+          INTERLOCK_CONFIG: |
+              ListenAddr = ":8080"
+              DockerURL = "unix:///var/run/docker.sock"
+              [[Extensions]]
+              Name = "haproxy"
+              ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
+              PidPath = "/var/run/haproxy.pid"
+              TemplatePath = ""
+              BackendOverrideAddress = "172.17.0.1"
+              MaxConn = 1024
+              Port = 80
+              AdminUser = "admin"
+              AdminPass = "interlock"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+
+
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - 80:80
+    labels:
+      - "interlock.ext.name=haproxy"
+    links:
+      - interlock:interlock
+    depends_on:
+      - interlock

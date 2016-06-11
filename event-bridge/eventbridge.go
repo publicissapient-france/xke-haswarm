@@ -38,8 +38,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type ServiceHitEvent struct {
-	Type string `json:"type"`
-	Name string `json:"name"`
+	Name     string `json:"name"`
+	Filename string `json:"filename"`
+	Hostname string `json:"hostname"`
+	Hits     int    `json:"hits"`
 }
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
