@@ -4,17 +4,18 @@ import Service from "./Service"
 
 class Trombi extends React.Component {
     render() {
-        const {services} = this.props;
-        return <div className="trombi">
+        const {services, onHitClick} = this.props;
+        return <div className="trombi" onClick={() => console.log("pouet")} >
             {
-                services.map(s => <Service key={s.name} {...s} />)
+                services.map(s => <Service key={s.name} {...s} onServiceClick={() => onHitClick(s)}/>)
             }
         </div>
     }
 }
 
 Trombi.propTypes = {
-    services: PropTypes.array.isRequired
+    services: PropTypes.array.isRequired,
+    onHitClick: PropTypes.func.isRequired
 };
 
 export default Trombi;

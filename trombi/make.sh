@@ -19,13 +19,13 @@ EOUSAGE
 
 case $1 in
   builder)
-#    (cd $CWD/event-bridge; docker build -f Dockerfile.build -t $IMAGE-builder1 . )
-    (cd $CWD/trombi; docker build -f $CWD/trombi/Dockerfile.build -t $IMAGE-builder . )
+    (cd $CWD/event-bridge; docker build -f Dockerfile.build -t $IMAGE-builder1 . )
+    (cd $CWD/trombi; docker build -f $CWD/trombi/Dockerfile.build -t $IMAGE-builder2 . )
   ;;
   build)
     rm -rf $CWD/dist
-    docker run -v gopath:/go/src -v $CWD/event-bridge:/go/src/github.com/tauffredou/pcd-monitor -v $CWD/dist:/output $IMAGE-builder1
-    docker run -v $CWD/trombi:/app -v $CWD/dist/static:/app/dist $IMAGE-builder2 webpack
+#    docker run -v gopath:/go/src -v $CWD/event-bridge:/go/src/github.com/tauffredou/pcd-monitor -v $CWD/dist:/output $IMAGE-builder1
+    docker run -v $CWD/trombi:/app -v $CWD/dist/static:/app/dist $IMAGE-builder webpack
     cp $CWD/trombi/dist/index.html $CWD/dist/static
     echo "Built in $CWD/bin"
   ;;

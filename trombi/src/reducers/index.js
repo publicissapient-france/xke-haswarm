@@ -5,7 +5,8 @@ const defaultService = {
     countBuffer: 0,
     countRing: new Array(10).fill(0),
     name: "",
-    url: ""
+    filename: "",
+    hostname: "",
 };
 
 const ringSize = 100;
@@ -15,10 +16,20 @@ function serviceReducer(state = defaultService, action, ringOffset) {
     switch (action.type) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
-                url: "http://" + action.hostname + "/static/img/" + action.filename,
+                hostname: action.hostname,
+                filename: action.filename,
                 name: action.name,
                 countBuffer: state.countBuffer + 1
             });
+        case actions.SERVICE_RECEIVED:
+
+            return Object.assign({}, state, {
+                hostname: action.hostname,
+                filename: action.filename,
+                name: action.name,
+                countBuffer: 0
+            });
+
         case actions.RING_TICK:
             newRing = state.countRing.slice();
             newRing[ringOffset] = state.countBuffer;
@@ -39,6 +50,26 @@ function rootReducer(state, action) {
                 services: Object.assign({}, state.services, {
                     [action.name]: serviceReducer(state.services[action.service], action, state.ringOffset)
                 })
+            });
+        case actions.SERVICE_HIT_PENDING:
+            return Object.assign({}, state, {
+                hitPending: true
+            });
+        case actions.SERVICE_HIT_COMPLETED:
+            return Object.assign({}, state, {
+                hitPending: false
+            });
+        case actions.SERVICE_RECEIVED:
+
+            return Object.assign({}, state, {
+                services: Object.keys(action.services).reduce((newObj, key) => {
+                    var subAction = Object.assign({}, action.services[key], {
+                        type: action.type
+                    });
+
+                    newObj[key] = serviceReducer(state.services[key], subAction);
+                    return newObj;
+                }, {})
             });
         case actions.RING_TICK:
 

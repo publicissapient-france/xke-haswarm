@@ -6,38 +6,23 @@ services:
     ports:
       - 6379:6379
 
-  monitor:
-    image: tauffredou/pcd-monitor
-    environment:
-    - REDIS_HOST=redis
-    labels:
-      - "interlock.hostname=monitor"
-      - "interlock.domain=${IP}.xip.io"
-    depends_on:
-      - haproxy
-    ports:
-      - 8082:8082
-
-  unicorn:
-    image: identity
-    hostname: unicorn.${IP}.xip.io
-    environment:
-        NAME: Unicorn
-        FILENAME: unicorn.jpg
-
-    labels:
-      - "interlock.hostname=unicorn"
-      - "interlock.domain=${IP}.xip.io"
-    depends_on:
-      - haproxy
-    ports:
-      - 8080
+#  monitor:
+#    image: tauffredou/pcd-monitor
+#    environment:
+#    - REDIS_HOST=redis
+#    labels:
+#      - "interlock.hostname=monitor"
+#      - "interlock.domain=${IP}.xip.io"
+#    depends_on:
+#      - haproxy
+#    ports:
+#      - 8082:8082
 
   jlrigau:
     image: identity
     hostname: jlrigau.${IP}.xip.io
     environment:
-        NAME: jlrigau
+        NAME: Jean-Louis Rigau
         FILENAME: jlrigau.png
         URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png
     labels:
@@ -52,7 +37,7 @@ services:
     image: identity
     hostname: jsimon.${IP}.xip.io
     environment:
-        NAME: jsimon
+        NAME: Julien Simon
         FILENAME: jsimon.png
         URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Julien-Simon-AWS.png
     labels:
