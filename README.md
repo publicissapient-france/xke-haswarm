@@ -1,11 +1,5 @@
 # xke-haswarm
 
-## Package Docker image
-
-```
-./make.sh build-chain
-```
-
 ## Start on localhost
 
 ```
