@@ -37,7 +37,7 @@ export const hitServiceCompleted = () => {
 export function hitServiceRequested(service) {
     return function (dispatch) {
         dispatch(hitServicePending());
-        var hitRequest = new Request("http://" + service.hostname + '/identity/hit', {
+        var hitRequest = new Request(service.hitUrl, {
             method: 'POST', headers: {
                 'Content-Type': 'application/json'
             }
