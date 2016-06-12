@@ -4,9 +4,8 @@ RUN curl https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz | tar 
 ENV PATH=$PATH:/usr/local/go/bin GOOS=linux GOARCH=amd64
 
 WORKDIR /src
-COPY package.json /app/package.json
+COPY package.json /src/package.json
 RUN npm install
-RUN npm install -g webpack webpack-dev-server
 
 RUN mkdir /go
 ENV GOPATH=/go
@@ -14,6 +13,6 @@ RUN go get github.com/gorilla/websocket
 RUN go get github.com/caarlos0/env
 RUN go get github.com/garyburd/redigo/redis
 
-VOLUME /src
+COPY . /src
 
-CMD go build -o /src/dist/pcd-monitor /src/trombi.go && webpack
+CMD cd /src && go build -o pcd-monitor trombi.go && node_modules/.bin/webpack

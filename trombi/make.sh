@@ -24,7 +24,7 @@ case $1 in
   ;;
   build)
     rm -rf $CWD/dist
-    docker run --rm -v $CWD:/src -v $CWD/dist:/src/dist $IMAGE-builder
+    docker run -v $CWD/dist:/src/dist $IMAGE-builder
   ;;
   image)
     cp $CWD/Dockerfile $CWD/dist/
