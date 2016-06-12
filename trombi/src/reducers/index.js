@@ -6,7 +6,7 @@ const defaultService = {
     countRing: new Array(10).fill(0),
     name: "",
     filename: "",
-    hostname: "",
+    hostname: ""
 };
 
 const ringSize = 100;
@@ -17,15 +17,15 @@ function serviceReducer(state = defaultService, action, ringOffset) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
                 hostname: action.hostname,
-                filename: action.filename,
-                name: action.name,
+                filename: action.identity.filename,
+                name: action.identity.name,
                 countBuffer: state.countBuffer + 1
             });
         case actions.SERVICE_RECEIVED:
 
             return Object.assign({}, state, {
                 hostname: action.hostname,
-                filename: action.filename,
+                filename: action.identity.filename,
                 name: action.name,
                 countBuffer: 0
             });
@@ -61,16 +61,20 @@ function rootReducer(state, action) {
             });
         case actions.SERVICE_RECEIVED:
 
-            return Object.assign({}, state, {
-                services: Object.keys(action.services).reduce((newObj, key) => {
-                    var subAction = Object.assign({}, action.services[key], {
-                        type: action.type
-                    });
-
-                    newObj[key] = serviceReducer(state.services[key], subAction);
-                    return newObj;
-                }, {})
+            var services= {};
+            action.services.forEach(s => {
+                services[s.hostname]={
+                    countBuffer: 0,
+                    countRing: new Array(10).fill(0),
+                    hostname: s.hostname + "." +  s.domainname,
+                    name: s.identity.name,
+                    filename: s.identity.filename
+                }
             });
+            return Object.assign({}, state, {
+                services: services
+            });
+
         case actions.RING_TICK:
 
             var newOffset = (state.ringOffset + 1) % ringSize;

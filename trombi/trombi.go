@@ -9,12 +9,13 @@ import (
 	"net/http"
 	"strconv"
 	"encoding/json"
+	"io/ioutil"
 )
 
 type Config struct {
 	RedisHost string `env:"REDIS_HOST" envDefault:"localhost"`
 	RedisPort int    `env:"REDIS_PORT" envDefault:"6379"`
-
+	RegistryUrl string `env:"REGISTRY_URL" envDefault:"http://service-discovery:8080"`
 }
 
 var (
@@ -41,10 +42,14 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func registryHandler(w http.ResponseWriter, r *http.Request) {
-	json, _ := json.Marshal(registry)
-	fmt.Printf("Handle services: %s\n",json)
-	w.Write(json)
-	//fmt.Fprintln(w,"%s"json)
+	resp, err := http.Get(cfg.RegistryUrl + "/json")
+	if err != nil {
+		// handle error
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	w.Write(body)
 }
 
 type ServiceHitEvent struct {
