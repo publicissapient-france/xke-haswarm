@@ -13,14 +13,30 @@ type Config struct {
 
 var cfg = Config{}
 
-func listServices() ([]docker.APIContainers, error) {
+func getContainer(id string) (*docker.Container, error) {
 	client, err := docker.NewClient(cfg.DockerEndpoint)
 
 	if err != nil {
 		return nil, err
 	}
 
-	containers, err := client.ListContainers(docker.ListContainersOptions{
+	container, err := client.InspectContainer(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return container, nil
+}
+
+func listServices() ([]*docker.Container, error) {
+	client, err := docker.NewClient(cfg.DockerEndpoint)
+
+	if err != nil {
+		return nil, err
+	}
+
+	containerList, err := client.ListContainers(docker.ListContainersOptions{
 		Filters: map[string][]string{
 			"ancestor":  {"jlrigau/identity"},
 		},
@@ -30,19 +46,31 @@ func listServices() ([]docker.APIContainers, error) {
 		return nil, err
 	}
 
-	return containers, nil
+	var services []*docker.Container
+
+	for _, apiContainer := range containerList {
+		container, err := getContainer(apiContainer.ID)
+
+		if err != nil {
+			return nil, err
+		}
+
+		services = append(services, container)
+	}
+
+	return services, nil
 }
 
 var templates = template.Must(template.ParseFiles("services.html"))
 
 func servicesHandler(w http.ResponseWriter, r *http.Request) {
-	containers, err := listServices()
+	services, err := listServices()
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	err = templates.ExecuteTemplate(w, "services.html", containers)
+	err = templates.ExecuteTemplate(w, "services.html", services)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
