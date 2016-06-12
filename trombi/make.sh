@@ -27,7 +27,7 @@ case $1 in
     docker run -v $CWD/dist:/src/dist $IMAGE-builder
   ;;
   image)
-    cp $CWD/Dockerfile $CWD/dist/
+    cp $CWD/{Dockerfile,index.html} $CWD/dist/
     docker build -t $IMAGE $CWD/dist
     echo run pcd-monitor with: docker run $IMAGE
   ;;
