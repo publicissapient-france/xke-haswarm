@@ -10,7 +10,7 @@ module.exports = {
         // 'webpack-hot-middleware/client',
         "./src/app.js"],
     output: {
-        path: 'dist',
+        path: 'dist/static',
         filename: "bundle.js"
     },
     node: {

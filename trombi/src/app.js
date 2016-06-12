@@ -9,11 +9,6 @@ import {Router, Route, hashHistory} from 'react-router'
 
 require("./trombi.less");
 
-// let store = createStore(
-//     reducer,
-//     applyMiddleware(thunk, logger)
-// );
-
 // Some trivial routing
 var isMonitor = window.location.hash.startsWith("#monitor");
 const initialState = {
@@ -57,5 +52,3 @@ render(
     </Provider>,
     document.getElementById('root')
 );
-
-// store.dispatch(fetchProjects());

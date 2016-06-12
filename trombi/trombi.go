@@ -88,7 +88,7 @@ func main() {
 		}
 	}()
 
-	fs := http.FileServer(http.Dir("dist"))
+	fs := http.FileServer(http.Dir("static"))
 	http.HandleFunc("/ws", wsHandler)
 	http.HandleFunc("/services", registryHandler)
 	http.Handle("/", fs)
