@@ -13,7 +13,7 @@
 </head>
 <body>
     {{range .}}
-    <p><a href="http://{{.Config.Hostname}}.{{.Config.Domainname}}/identity" target="_blank">{{.Config.Hostname}}.{{.Config.Domainname}}</a></p>
+    <p><a href="{{.Url}}" target="_blank">{{.Hostname}}.{{.Domainname}}</a></p>
     {{end}}
 </body>
 </html>
