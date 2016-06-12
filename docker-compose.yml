@@ -18,8 +18,18 @@ services:
     ports:
       - 8082:8082
 
+  service-discovery:
+    image: jlrigau/service-discovery
+    labels:
+      - "interlock.hostname=service-discovery"
+      - "interlock.domain=${IP}.xip.io"
+    ports:
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   jlrigau:
-    image: identity
+    image: jlrigau/identity
     hostname: jlrigau.${IP}.xip.io
     environment:
         NAME: Jean-Louis Rigau
@@ -34,7 +44,7 @@ services:
       - 8080
 
   jsimon:
-    image: identity
+    image: jlrigau/identity
     hostname: jsimon.${IP}.xip.io
     environment:
         NAME: Julien Simon
