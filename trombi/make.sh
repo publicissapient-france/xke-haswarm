@@ -29,7 +29,6 @@ case $1 in
   image)
     cp $CWD/Dockerfile $CWD/dist/
     docker build -t $IMAGE $CWD/dist
-    echo run pcd-monitor with: docker run $IMAGE
   ;;
   run)
     docker run $IMAGE
