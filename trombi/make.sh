@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 
 CWD=$(cd $(dirname $0);pwd)
 MAKE=$0
@@ -19,15 +20,11 @@ EOUSAGE
 
 case $1 in
   builder)
-    (cd $CWD/event-bridge; docker build -f Dockerfile.build -t $IMAGE-builder1 . )
-    (cd $CWD/trombi; docker build -f $CWD/trombi/Dockerfile.build -t $IMAGE-builder2 . )
+    (cd $CWD; docker build -f $CWD/Dockerfile.build -t $IMAGE-builder . )
   ;;
   build)
     rm -rf $CWD/dist
-#    docker run -v gopath:/go/src -v $CWD/event-bridge:/go/src/github.com/tauffredou/pcd-monitor -v $CWD/dist:/output $IMAGE-builder1
-    docker run -v $CWD/trombi:/app -v $CWD/dist/static:/app/dist $IMAGE-builder webpack
-    cp $CWD/trombi/dist/index.html $CWD/dist/static
-    echo "Built in $CWD/bin"
+    docker run -v $CWD:/src -v $CWD/dist:/src/dist $IMAGE-builder
   ;;
   image)
     cp $CWD/Dockerfile $CWD/dist/

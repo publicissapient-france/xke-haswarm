@@ -1,19 +1,19 @@
 FROM node
 
 RUN curl https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz | tar xz -C /usr/local/
-ENV PATH=$PATH:/usr/local/go/bin GOPATH=/usr/local/go
+ENV PATH=$PATH:/usr/local/go/bin GOOS=linux GOARCH=amd64
 
-WORKDIR /app
+WORKDIR /src
 COPY package.json /app/package.json
 RUN npm install
 RUN npm install -g webpack webpack-dev-server
 
+RUN mkdir /go
+ENV GOPATH=/go
 RUN go get github.com/gorilla/websocket
 RUN go get github.com/caarlos0/env
 RUN go get github.com/garyburd/redigo/redis
 
-COPY make.sh
-VOLUME /app
+VOLUME /src
 
-CMD GOOS=linux GOARCH=amd64 go build -o /output/pcd-monitor
-
+CMD go build -o /src/dist/pcd-monitor /src/trombi.go && webpack
