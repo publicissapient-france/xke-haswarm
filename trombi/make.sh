@@ -10,6 +10,7 @@ cat<<-EOUSAGE
 make.sh [Action]
 Actions:
   builder       create builder image
+  clean         clean up
   build         create binary using builder image
   image         create final image
   run           run the final image
@@ -22,8 +23,11 @@ case $1 in
   builder)
     (cd $CWD; docker build -f $CWD/Dockerfile.build -t $IMAGE-builder . )
   ;;
-  build)
+  clean)
     rm -rf $CWD/dist
+  ;;
+  build)
+    $MAKE clean
     docker run --rm -v $CWD/dist:/src/dist $IMAGE-builder
   ;;
   image)
