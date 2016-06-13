@@ -23,7 +23,8 @@ variable "aws_amis" {
   type = "map"
 
   default = {
-    eu-central-1 = "ami-8d21cee2"
+//    eu-central-1 = "ami-8d21cee2"
+    eu-central-1 = "ami-60eb020f"
   }
 }
 
