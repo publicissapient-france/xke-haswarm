@@ -36,6 +36,27 @@
       command: ["manage" ,"-H", ":3375" , "--replication" , "--advertise",  "{{ private_ip }}:3375","consul://{{ private_ip }}:8500/nodes" ]
       state: started
       network_mode: host
+
+- hosts: node
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+  - name: Create a swarm agent
+    become: yes
+    become_user: root
+    docker_container:
+      name: swarm-agent
+      image: swarm
+      command: ["join" , "--advertise",  "{{ private_ip }}:2375","consul://{{ hostvars[groups['master'][0]]['ansible_eth0']['ipv4']['address'] }}:8500/nodes" ]
+      state: started
+      network_mode: host
+  - file: path="/etc/systemd/system/docker.service.d" state=directory
+  - name: "Copy docker service conf"
+    template: src=files/ubuntu.conf.j2 dest=/etc/systemd/system/docker.service.d/ubuntu.conf owner=root group=root mode=0644
+    notify:
+    - reload systemd
+    - restart docker
   - name: Create an interlock proxy
     become: yes
     become_user: root
@@ -80,27 +101,6 @@
       recreate: yes
       links:
         - interlock:interlock
-
-- hosts: node
-  remote_user: ubuntu
-  become: yes
-  become_user: root
-  tasks:
-  - name: Create a swarm agent
-    become: yes
-    become_user: root
-    docker_container:
-      name: swarm-agent
-      image: swarm
-      command: ["join" , "--advertise",  "{{ private_ip }}:2375","consul://{{ hostvars[groups['master'][0]]['ansible_eth0']['ipv4']['address'] }}:8500/nodes" ]
-      state: started
-      network_mode: host
-  - file: path="/etc/systemd/system/docker.service.d" state=directory
-  - name: "Copy docker service conf"
-    template: src=files/ubuntu.conf.j2 dest=/etc/systemd/system/docker.service.d/ubuntu.conf owner=root group=root mode=0644
-    notify:
-    - reload systemd
-    - restart docker
 
   handlers:
   - name: reload systemd

@@ -22,6 +22,7 @@ CWD=$(pwd $(dirname $0))
 set -x
 cd $CWD/terraform
 terraform apply --input=false && (
+    chmod 600 $CWD/terraform/xke-ha-swarm.pem;
     node $CWD/tools/terraform2ansible.js $CWD/terraform/terraform.tfstate $CWD/inventory;
-    ansible-playbook -v -i "$CWD/inventory" --private-key="$CWD/terraform/xke-ha-swarm.pem" "$CWD/ansible/site.yml"
+    ansible-playbook -i "$CWD/inventory" --private-key="$CWD/terraform/xke-ha-swarm.pem" "$CWD/ansible/site.yml"
 )
