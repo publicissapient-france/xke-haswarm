@@ -73,7 +73,6 @@ services:
               DockerURL = "unix:///var/run/docker.sock"
               [[Extensions]]
               Name = "haproxy"
-              TemplatePath = "/etc/interlock/haproxy.cfg.template"
               ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
               PidPath = "/var/run/haproxy.pid"
               TemplatePath = ""
@@ -92,7 +91,7 @@ services:
       - 80:80
     labels:
       - "interlock.ext.name=haproxy"
-    links:
-      - interlock:interlock
+    environment:
+      - "affinity:container==xkehaswarm_interlock_1"
     depends_on:
       - interlock
