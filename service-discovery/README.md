@@ -29,5 +29,5 @@ $ make push-image
 Run the application
 
 ```shell
-$ docker run -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock jlrigau/service-discovery
+$ docker run -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock xebiafrance/service-discovery
 ```

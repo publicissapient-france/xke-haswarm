@@ -15,4 +15,4 @@ RUN go get github.com/garyburd/redigo/redis
 
 COPY . /src
 
-CMD go build -o dist/pcd-monitor trombi.go && node_modules/.bin/webpack
+CMD go build -o dist/trombi trombi.go && node_modules/.bin/webpack

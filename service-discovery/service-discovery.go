@@ -53,7 +53,7 @@ func listServices() ([]*Service, error) {
 
 	containerList, err := client.ListContainers(docker.ListContainersOptions{
 		Filters: map[string][]string{
-			"ancestor":  {"jlrigau/identity"},
+			"ancestor":  {"xebiafrance/identity"},
 		},
 	})
 

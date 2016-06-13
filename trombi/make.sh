@@ -3,7 +3,7 @@ set -x
 
 CWD=$(cd $(dirname $0);pwd)
 MAKE=$0
-IMAGE=tauffredou/pcd-monitor
+IMAGE=xebiafrance/trombi
 
 usage(){
 cat<<-EOUSAGE
@@ -13,6 +13,7 @@ Actions:
   clean         clean up
   build         create binary using builder image
   image         create final image
+  push          push the final image
   run           run the final image
   build-chain   builder,build,image
 
@@ -33,6 +34,9 @@ case $1 in
   image)
     cp $CWD/Dockerfile $CWD/dist/
     docker build -t $IMAGE $CWD/dist
+  ;;
+  push)
+    docker push $IMAGE
   ;;
   run)
     docker run $IMAGE

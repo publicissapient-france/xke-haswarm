@@ -7,7 +7,7 @@ services:
       - 6379:6379
 
   monitor:
-    image: tauffredou/pcd-monitor
+    image: xebiafrance/trombi
     environment:
     - REDIS_HOST=redis
     labels:
@@ -20,7 +20,7 @@ services:
       - 8082
 
   service-discovery:
-    image: jlrigau/service-discovery
+    image: xebiafrance/service-discovery
     labels:
       - "interlock.hostname=service-discovery"
       - "interlock.domain=${IP}.xip.io"
@@ -30,7 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   jlrigau:
-    image: jlrigau/identity
+    image: xebiafrance/identity
     hostname: jlrigau.${IP}.xip.io
     environment:
         NAME: Jean-Louis Rigau
@@ -46,7 +46,7 @@ services:
       - 8080
 
   jsimon:
-    image: jlrigau/identity
+    image: xebiafrance/identity
     hostname: jsimon.${IP}.xip.io
     environment:
         NAME: Julien Simon
@@ -73,6 +73,7 @@ services:
               DockerURL = "unix:///var/run/docker.sock"
               [[Extensions]]
               Name = "haproxy"
+              TemplatePath = "/etc/interlock/haproxy.cfg.template"
               ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
               PidPath = "/var/run/haproxy.pid"
               TemplatePath = ""

@@ -1,12 +1,12 @@
 all: compile build-image
 
 compile:
-	docker run --rm -v $(PWD):/usr/src/service-discovery -w /usr/src/service-discovery \
+	docker run --rm -v $(PWD):/usr/src/identity -w /usr/src/identity \
      			 	-e CGO_ENABLED=0 -e GOOS=linux -e GOARCH=amd64 \
      			 	golang:1.6 bash -c "go get -v -d && go build -v"
 
 build-image:
-	docker build -t xebiafrance/service-discovery .
+	docker build -t xebiafrance/identity .
 
 push-image:
-	docker push xebiafrance/service-discovery
+	docker push xebiafrance/identity

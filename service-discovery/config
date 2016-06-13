@@ -1,0 +1,29 @@
+Host xke-haswarm-*
+  User ubuntu
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/xke-ha-swarm.pem
+  IdentitiesOnly true
+
+Host xke-haswarm-master1
+  Hostname 52.58.135.161
+
+Host xke-haswarm-master2
+  Hostname 52.29.108.163
+
+Host xke-haswarm-master3
+  Hostname 52.58.2.206
+
+Host xke-haswarm-slave1
+  Hostname 52.29.172.121
+
+Host xke-haswarm-slave2
+  Hostname 52.29.160.17
+
+Host xke-haswarm-slave3
+  Hostname 52.58.41.38
+
+Host xke-haswarm-slave4
+  Hostname 52.58.200.135
+
+Host xke-haswarm-slave5
+  Hostname 52.58.193.222
