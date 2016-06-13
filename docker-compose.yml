@@ -62,28 +62,27 @@ services:
       - 8080
 
   interlock:
-      image: ehazlett/interlock:master
-      command: -D run -c /etc/interlock/config.toml
-      tty: true
-      ports:
-          - 8080
-      environment:
-          INTERLOCK_CONFIG: |
-              ListenAddr = ":8080"
-              DockerURL = "unix:///var/run/docker.sock"
-              [[Extensions]]
-              Name = "haproxy"
-              ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
-              PidPath = "/var/run/haproxy.pid"
-              TemplatePath = ""
-              BackendOverrideAddress = "172.17.0.1"
-              MaxConn = 1024
-              Port = 80
-              AdminUser = "admin"
-              AdminPass = "interlock"
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-
+    image: ehazlett/interlock:master
+    command: -D run -c /etc/interlock/config.toml
+    tty: true
+    ports:
+      - 8080
+    environment:
+      INTERLOCK_CONFIG: |
+        ListenAddr = ":8080"
+        DockerURL = "unix:///var/run/docker.sock"
+        [[Extensions]]
+        Name = "haproxy"
+        ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
+        PidPath = "/var/run/haproxy.pid"
+        TemplatePath = ""
+        BackendOverrideAddress = "172.17.0.1"
+        MaxConn = 1024
+        Port = 80
+        AdminUser = "admin"
+        AdminPass = "interlock"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   haproxy:
     image: haproxy:latest
