@@ -106,6 +106,9 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *Identity)) http.Ha
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		fn(w, r, identity)
 	}
 }
@@ -142,6 +145,27 @@ func hitHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
 	http.Redirect(w, r, "/identity", http.StatusFound)
 }
 
+
+func directhitHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
+	identity.Hits = identity.Hits + 1
+
+	js, err := json.Marshal(identity)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = publish(cfg.RedisChannel, js)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	return
+}
+
 func identityHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
 	err = templates.ExecuteTemplate(w, "identity.html", identity)
 
@@ -159,6 +183,7 @@ func main() {
 
 	http.HandleFunc("/identity", makeHandler(identityHandler))
 	http.HandleFunc("/identity/hit", makeHandler(hitHandler))
+	http.HandleFunc("/identity/directhit", makeHandler(directhitHandler))
 	http.HandleFunc("/identity/json", makeHandler(jsonHandler))
 
 	http.HandleFunc("/static/", staticHandler)
