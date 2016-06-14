@@ -17,8 +17,8 @@ function serviceReducer(state = defaultService, action, ringOffset) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
                 hostname: action.hostname,
-                filename: action.identity.filename,
-                name: action.identity.name,
+                filename: action.filename,
+                name: action.name,
                 countBuffer: state.countBuffer + 1
             });
         case actions.SERVICE_RECEIVED:

@@ -10,7 +10,8 @@ const mapStateToProps = (state) => {
             name: state.services[k].name,
             count: state.services[k].countRing ? state.services[k].countRing.reduce(getSum)/10 : 0,
             url: "http://" + state.services[k].hostname + "/static/img/" + state.services[k].filename,
-            hitUrl: "http://" + state.services[k].hostname + "/identity/hit/",
+            hitUrl: "http://" + state.services[k].hostname + "/identity/hit",
+            identityUrl: "http://" + state.services[k].hostname + "/identity",
             hitPending : state.hitPending,
             isMonitor: state.isMonitor
         }))

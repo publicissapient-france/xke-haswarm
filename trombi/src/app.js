@@ -31,7 +31,6 @@ function configureWebsocket() {
     conn.onclose = () => setTimeout(configureWebsocket, 1000);
     conn.onopen = () => {
         console.log('Connected');
-        store.dispatch(fetchServices());
     };
 
     conn.onmessage = function (evt) {
@@ -52,3 +51,5 @@ render(
     </Provider>,
     document.getElementById('root')
 );
+
+store.dispatch(fetchServices());

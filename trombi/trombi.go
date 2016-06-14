@@ -5,6 +5,7 @@ import (
 	"github.com/caarlos0/env"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/websocket"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
@@ -15,6 +16,7 @@ import (
 type Config struct {
 	RedisHost string `env:"REDIS_HOST" envDefault:"localhost"`
 	RedisPort int    `env:"REDIS_PORT" envDefault:"6379"`
+	ServerPort string    `env:"SERVER_PORT" envDefault:"8082"`
 	RegistryUrl string `env:"REGISTRY_URL" envDefault:"http://service-discovery:8080"`
 }
 
@@ -93,9 +95,33 @@ func main() {
 		}
 	}()
 
-	fs := http.FileServer(http.Dir("static"))
-	http.HandleFunc("/ws", wsHandler)
-	http.HandleFunc("/services", registryHandler)
-	http.Handle("/", fs)
-	http.ListenAndServe(":8082", nil)
+
+	r := mux.NewRouter()
+
+	r.HandleFunc("/ws", wsHandler)
+	r.HandleFunc("/services", registryHandler)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+	http.Handle("/", &MyServer{r})
+
+	http.ListenAndServe(":" + cfg.ServerPort, nil)
+}
+
+
+type MyServer struct {
+	r *mux.Router
+}
+
+func (s *MyServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	if origin := req.Header.Get("Origin"); origin != "" {
+		rw.Header().Set("Access-Control-Allow-Origin", origin)
+		rw.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		rw.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+	// Stop here if its Preflighted OPTIONS request
+	if req.Method == "OPTIONS" {
+		return
+	}
+	// Lets Gorilla work
+	s.r.ServeHTTP(rw, req)
 }
