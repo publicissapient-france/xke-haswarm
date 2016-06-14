@@ -21,7 +21,6 @@ let store = configureStore(initialState);
 
 
 setInterval(() => store.dispatch(ringTick()), 100);
-console.log(window.location);
 var conn;
 function configureWebsocket() {
     var url = "ws://" + window.location.host + "/ws";

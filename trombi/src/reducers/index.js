@@ -15,12 +15,13 @@ function serviceReducer(state = defaultService, action, ringOffset) {
     var newRing;
     switch (action.type) {
         case actions.SERVICE_HIT:
-            return Object.assign({}, state, {
+            var assign = Object.assign({}, state, {
                 hostname: action.hostname,
                 filename: action.filename,
                 name: action.name,
                 countBuffer: state.countBuffer + 1
             });
+            return assign;
         case actions.SERVICE_RECEIVED:
 
             return Object.assign({}, state, {
@@ -31,7 +32,7 @@ function serviceReducer(state = defaultService, action, ringOffset) {
             });
 
         case actions.RING_TICK:
-            newRing = state.countRing.slice();
+            newRing = state.countRing;
             newRing[ringOffset] = state.countBuffer;
 
             return Object.assign({}, state, {
@@ -63,7 +64,7 @@ function rootReducer(state, action) {
 
             var services= {};
             action.services.forEach(s => {
-                services[s.hostname]={
+                services[s.identity.name]={
                     countBuffer: 0,
                     countRing: new Array(10).fill(0),
                     hostname: s.hostname + "." +  s.domainname,

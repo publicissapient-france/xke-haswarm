@@ -15,7 +15,6 @@ export function hitService(service) {
 }
 
 export const receiveServices = (newServices) => {
-    console.log(newServices);
     return {
         type: SERVICE_RECEIVED,
         services: newServices
@@ -37,6 +36,7 @@ export const hitServiceCompleted = () => {
 export function hitServiceRequested(service) {
     return function (dispatch) {
         dispatch(hitServicePending());
+        console.log(service.hitUrl);
         var hitRequest = new Request(service.hitUrl, {
             method: 'POST', headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +49,6 @@ export function hitServiceRequested(service) {
 }
 
 export function fetchServices() {
-    console.log("fetch services");
     return function (dispatch) {
         return fetch('/services')
             .then(response => response.json())
