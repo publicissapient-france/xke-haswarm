@@ -1,0 +1,99 @@
+version: "2"
+
+services:
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  monitor:
+    image: xebiafrance/trombi
+    environment:
+    - REDIS_HOST=redis
+    labels:
+      - "interlock.hostname=monitor"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+      - redis
+    ports:
+      - 8082
+    volumes:
+      - ./trombi/dist/static:/app/static
+
+
+  service-discovery:
+    image: xebiafrance/service-discovery
+    labels:
+      - "interlock.hostname=service-discovery"
+      - "interlock.domain=${IP}.xip.io"
+    ports:
+      - 8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  jlrigau:
+    image: xebiafrance/identity
+    hostname: jlrigau.${IP}.xip.io
+    environment:
+        NAME: Jean-Louis Rigau
+        FILENAME: jlrigau.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png
+    labels:
+      - "interlock.hostname=jlrigau"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+      - redis
+    ports:
+      - 8080
+
+  jsimon:
+    image: xebiafrance/identity
+    hostname: jsimon.${IP}.xip.io
+    environment:
+        NAME: Julien Simon
+        FILENAME: jsimon.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Julien-Simon-AWS.png
+    labels:
+      - "interlock.hostname=jsimon"
+      - "interlock.domain=${IP}.xip.io"
+    depends_on:
+      - haproxy
+      - redis
+    ports:
+      - 8080
+
+  interlock:
+    image: ehazlett/interlock:master
+    command: -D run -c /etc/interlock/config.toml
+    tty: true
+    ports:
+      - 8080
+    environment:
+      INTERLOCK_CONFIG: |
+        ListenAddr = ":8080"
+        DockerURL = "unix:///var/run/docker.sock"
+        [[Extensions]]
+        Name = "haproxy"
+        ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
+        PidPath = "/var/run/haproxy.pid"
+        TemplatePath = ""
+        BackendOverrideAddress = "172.17.0.1"
+        MaxConn = 1024
+        Port = 80
+        AdminUser = "admin"
+        AdminPass = "interlock"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - 80:80
+    labels:
+      - "interlock.ext.name=haproxy"
+    environment:
+      - "affinity:container==xkehaswarm_interlock_1"
+    depends_on:
+      - interlock

@@ -8,7 +8,7 @@ import {hitService, ringTick,fetchServices} from './actions'
 import {Router, Route, hashHistory} from 'react-router'
 
 require("./trombi.less");
-
+import * as constants from './constants'
 // Some trivial routing
 var isMonitor = window.location.hash.startsWith("#monitor");
 const initialState = {
@@ -20,7 +20,7 @@ const initialState = {
 let store = configureStore(initialState);
 
 
-setInterval(() => store.dispatch(ringTick()), 100);
+setInterval(() => store.dispatch(ringTick()), constants.RING_RESOLUTION);
 var conn;
 function configureWebsocket() {
     var url = "ws://" + window.location.host + "/ws";

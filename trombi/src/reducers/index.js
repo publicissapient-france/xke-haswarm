@@ -1,3 +1,4 @@
+import * as constants from '../constants.js'
 import * as actions from '../actions'
 import {combineReducers} from 'redux';
 
@@ -9,8 +10,13 @@ const defaultService = {
     hostname: ""
 };
 
-const ringSize = 100;
+const initialState = {
+    ringOffset: 0,
+    services: {},
+    isMonitor: false
+};
 
+var ringSize = (1000 / constants.RING_RESOLUTION);
 function serviceReducer(state = defaultService, action, ringOffset) {
     var newRing;
     switch (action.type) {
@@ -32,11 +38,10 @@ function serviceReducer(state = defaultService, action, ringOffset) {
             });
 
         case actions.RING_TICK:
-            newRing = state.countRing;
-            newRing[ringOffset] = state.countBuffer;
-
             return Object.assign({}, state, {
-                countRing: newRing,
+                countRing: Object.assign([], state.countRing, {
+                    [ringOffset]: state.countBuffer
+                }),
                 countBuffer: 0
             });
         default:
@@ -44,12 +49,12 @@ function serviceReducer(state = defaultService, action, ringOffset) {
     }
 }
 
-function rootReducer(state, action) {
+function rootReducer(state = initialState, action) {
     switch (action.type) {
         case actions.SERVICE_HIT:
             return Object.assign({}, state, {
                 services: Object.assign({}, state.services, {
-                    [action.name]: serviceReducer(state.services[action.service], action, state.ringOffset)
+                    [action.name]: serviceReducer(state.services[action.name], action, state.ringOffset)
                 })
             });
         case actions.SERVICE_HIT_PENDING:
@@ -62,12 +67,12 @@ function rootReducer(state, action) {
             });
         case actions.SERVICE_RECEIVED:
 
-            var services= {};
+            var services = {};
             action.services.forEach(s => {
-                services[s.identity.name]={
+                services[s.identity.name] = {
                     countBuffer: 0,
                     countRing: new Array(10).fill(0),
-                    hostname: s.hostname + "." +  s.domainname,
+                    hostname: s.hostname + "." + s.domainname,
                     name: s.identity.name,
                     filename: s.identity.filename
                 }
