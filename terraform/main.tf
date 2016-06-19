@@ -28,7 +28,7 @@ resource "aws_instance" "master" {
   instance_type = "t2.medium"
   subnet_id = "${aws_subnet.default.id}"
 
-  security_groups = [
+  vpc_security_group_ids = [
     "${aws_security_group.default.id}",
     "${aws_security_group.master.id}"
   ]
@@ -46,7 +46,7 @@ resource "aws_instance" "node" {
   key_name = "${var.key_name}"
   ami = "${lookup(var.aws_amis, var.aws_region)}"
   instance_type = "t2.medium"
-  security_groups = [
+  vpc_security_group_ids = [
     "${aws_security_group.default.id}"]
   subnet_id = "${aws_subnet.default.id}"
 
