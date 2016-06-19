@@ -145,25 +145,10 @@ func hitHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
 	http.Redirect(w, r, "/identity", http.StatusFound)
 }
 
+func hitHandlerAndRedirect(w http.ResponseWriter, r *http.Request, identity *Identity) {
+	hitHandler(w, r, identity)
 
-func directhitHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
-	identity.Hits = identity.Hits + 1
-
-	js, err := json.Marshal(identity)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = publish(cfg.RedisChannel, js)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	return
+	http.Redirect(w, r, "/identity", http.StatusFound)
 }
 
 func identityHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
@@ -182,8 +167,8 @@ func main() {
 	env.Parse(&cfg)
 
 	http.HandleFunc("/identity", makeHandler(identityHandler))
-	http.HandleFunc("/identity/hit", makeHandler(hitHandler))
-	http.HandleFunc("/identity/directhit", makeHandler(directhitHandler))
+	http.HandleFunc("/identity/hit", makeHandler(hitHandlerAndRedirect))
+	http.HandleFunc("/identity/directhit", makeHandler(hitHandler))
 	http.HandleFunc("/identity/json", makeHandler(jsonHandler))
 
 	http.HandleFunc("/static/", staticHandler)
