@@ -11,16 +11,14 @@ do
 
   ${CONTAINER_NAME}:
     image: xebiafrance/identity
-    hostname: ${CONTAINER_NAME}.\${IP}.xip.io
     environment:
         NAME: ${NAME}
         FILENAME: ${FILENAME}
         URL: ${URL}
     labels:
       - "interlock.hostname=${CONTAINER_NAME}"
-      - "interlock.domain=\${IP}.xip.io"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
     depends_on:
-      - haproxy
       - redis
     ports:
       - 8080
