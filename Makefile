@@ -5,21 +5,21 @@ ifndef AWS_ACCESS_KEY
 	$(error AWS_ACCESS_KEY is undefined)
 endif
 ifndef AWS_SECRET_KEY
-  $(error AWS_SECRET_KEY is undefined)
+	$(error AWS_SECRET_KEY is undefined)
 endif
 ifndef AWS_REGION
-  $(error AWS_REGION is undefined)
+	$(error AWS_REGION is undefined)
 endif
 ifndef AWS_PRIVATE_KEY
-  $(error AWS_PRIVATE_KEY is undefined)
+	$(error AWS_PRIVATE_KEY is undefined)
 endif
 
 launch-infra: check-env
 	docker run --rm -e AWS_ACCESS_KEY -e AWS_SECRET_KEY \
-    				 -e AWS_REGION -e AWS_PRIVATE_KEY=/key.pem \
-    				 -v ${AWS_PRIVATE_KEY}:/key.pem \
-    			 	 -v ${CWD}/terraform:/data \
-    			 	 uzyexe/terraform apply --input=false
+    				-e AWS_REGION -e AWS_PRIVATE_KEY=/key.pem \
+    				-v ${AWS_PRIVATE_KEY}:/key.pem \
+    				-v ${CWD}/terraform:/data \
+    				uzyexe/terraform apply --input=false
 
 terraform-to-ansible:
 	docker run --rm -v $(CWD)/terraform:/terraform \
