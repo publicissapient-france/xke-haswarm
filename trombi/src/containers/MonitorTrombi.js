@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
     return {
         services: Object.keys(state.services).map(k => ({
             name: state.services[k].name,
-            count: state.services[k].countRing ? state.services[k].countRing.reduce(getSum)/ (1000/constants.RING_RESOLUTION) : 0,
+            count: state.services[k].countRing ? state.services[k].countRing.reduce(getSum) : 0,
             url: "http://" + state.services[k].hostname + "/static/img/" + state.services[k].filename,
             hitUrl: "http://" + state.services[k].hostname + "/identity/directhit",
             identityUrl: "http://" + state.services[k].hostname + "/identity",
