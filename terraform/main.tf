@@ -17,7 +17,7 @@ resource "aws_subnet" "default" {
 
 resource "aws_key_pair" "default" {
   key_name = "${var.key_name}"
-  public_key = "${file("${var.key_name}.pub")}"
+  public_key = "${file("xke-ha-swarm.pub")}"
 }
 
 

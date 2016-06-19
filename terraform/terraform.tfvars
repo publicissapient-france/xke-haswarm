@@ -1,3 +1,5 @@
+project = "xke-ha-swarm"
+key_name = "xke-ha-swarm"
 master_count = 3
 node_count = 5
 vpc_id = "vpc-7f628416"
