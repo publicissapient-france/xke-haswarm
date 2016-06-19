@@ -10,6 +10,7 @@ import (
 	"io"
 	"encoding/json"
 	"strconv"
+	"time"
 )
 
 type Config struct {
@@ -18,7 +19,10 @@ type Config struct {
 	RedisChannel string `env:"REDIS_CHANNEL" envDefault:"service.hit"`
 }
 
-var cfg = Config{}
+var (
+	hitChan chan Identity
+	cfg = Config{}
+)
 
 func dial() (redis.Conn, error) {
 	c, err := redis.Dial("tcp", cfg.RedisHost + ":" + strconv.Itoa(cfg.RedisPort))
@@ -126,23 +130,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
 }
 
 func hitHandler(w http.ResponseWriter, r *http.Request, identity *Identity) {
-	identity.Hits = identity.Hits + 1
-
-	js, err := json.Marshal(identity)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = publish(cfg.RedisChannel, js)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	http.Redirect(w, r, "/identity", http.StatusFound)
+	hitChan <- *identity
 }
 
 func hitHandlerAndRedirect(w http.ResponseWriter, r *http.Request, identity *Identity) {
@@ -165,6 +153,7 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	env.Parse(&cfg)
+	hitChan = make(chan Identity)
 
 	http.HandleFunc("/identity", makeHandler(identityHandler))
 	http.HandleFunc("/identity/hit", makeHandler(hitHandlerAndRedirect))
@@ -172,6 +161,31 @@ func main() {
 	http.HandleFunc("/identity/json", makeHandler(jsonHandler))
 
 	http.HandleFunc("/static/", staticHandler)
+
+	// Use a single channel to simulate service bottleneck
+	go func() {
+		for {
+			select {
+			case identity:= <- hitChan:
+				identity.Hits = identity.Hits + 1
+
+				js, err := json.Marshal(identity)
+
+				if err != nil {
+					return
+				}
+
+				time.Sleep(100 * time.Millisecond)// Simulate latency
+				err = publish(cfg.RedisChannel, js)
+
+
+				if err != nil {
+					log.Print("Unable to push into redis")
+					return
+				}
+			}
+		}
+	}()
 
 	http.ListenAndServe(":8080", nil)
 }
