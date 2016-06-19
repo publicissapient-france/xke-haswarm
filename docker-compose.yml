@@ -9,7 +9,7 @@ services:
   monitor:
     image: xebiafrance/trombi
     environment:
-    - REDIS_HOST=redis
+      - REDIS_HOST=redis
     labels:
       - "interlock.hostname=monitor"
       - "interlock.domain=${IP}.xip.io"
@@ -26,40 +26,8 @@ services:
       - "interlock.domain=${IP}.xip.io"
     ports:
       - 8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  jlrigau:
-    image: xebiafrance/identity
-    hostname: jlrigau.${IP}.xip.io
     environment:
-        NAME: Jean-Louis Rigau
-        FILENAME: jlrigau.png
-        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png
-    labels:
-      - "interlock.hostname=jlrigau"
-      - "interlock.domain=${IP}.xip.io"
-    depends_on:
-      - haproxy
-      - redis
-    ports:
-      - 8080
-
-  jsimon:
-    image: xebiafrance/identity
-    hostname: jsimon.${IP}.xip.io
-    environment:
-        NAME: Julien Simon
-        FILENAME: jsimon.png
-        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Julien-Simon-AWS.png
-    labels:
-      - "interlock.hostname=jsimon"
-      - "interlock.domain=${IP}.xip.io"
-    depends_on:
-      - haproxy
-      - redis
-    ports:
-      - 8080
+        DOCKER_HOST: tcp://admin.xke-ha-swarm.aws.xebiatechevent.info:3375
 
   interlock:
     image: ehazlett/interlock:master
@@ -68,21 +36,19 @@ services:
     ports:
       - 8080
     environment:
-      INTERLOCK_CONFIG: |
-        ListenAddr = ":8080"
-        DockerURL = "unix:///var/run/docker.sock"
-        [[Extensions]]
-        Name = "haproxy"
-        ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
-        PidPath = "/var/run/haproxy.pid"
-        TemplatePath = ""
-        BackendOverrideAddress = "172.17.0.1"
-        MaxConn = 1024
-        Port = 80
-        AdminUser = "admin"
-        AdminPass = "interlock"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+        INTERLOCK_CONFIG: |
+            ListenAddr = ":8080"
+            DockerURL = "tcp://admin.xke-ha-swarm.aws.xebiatechevent.info:3375"
+            [[Extensions]]
+            Name = "haproxy"
+            ConfigPath = "/usr/local/etc/haproxy/haproxy.cfg"
+            PidPath = "/var/run/haproxy.pid"
+            TemplatePath = ""
+            BackendOverrideAddress = "172.17.0.1"
+            MaxConn = 1024
+            Port = 80
+            AdminUser = "admin"
+            AdminPass = "interlock"
 
   haproxy:
     image: haproxy:latest
@@ -91,6 +57,6 @@ services:
     labels:
       - "interlock.ext.name=haproxy"
     environment:
-      - "affinity:container==xkehaswarm_interlock_1"
+      - "affinity:image==ehazlett/interlock:master"
     depends_on:
       - interlock
