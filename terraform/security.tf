@@ -1,6 +1,7 @@
 resource "aws_security_group" "default" {
   name = "${var.project}-sg"
   description = "${var.project} security group"
+
   ingress {
     from_port = 22
     to_port = 22
@@ -16,7 +17,6 @@ resource "aws_security_group" "default" {
     cidr_blocks = [
       "0.0.0.0/0"]
   }
-
 
   ingress {
     from_port = 3375
@@ -53,9 +53,7 @@ resource "aws_security_group" "default" {
   tags {
     Name = "${var.project}-sg default"
   }
-
 }
-
 
 resource "aws_security_group" "master" {
   name = "${var.project}-sg master"
@@ -68,15 +66,4 @@ resource "aws_security_group_rule" "allow_swarm" {
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.master.id}"
-//  source_security_group_id = "${aws_elb.admin.source_security_group_id}"
 }
-
-//resource "aws_security_group_rule" "allow_ssh" {
-//  type = "ingress"
-//  from_port = 22
-//  to_port = 22
-//  protocol = "tcp"
-//  security_group_id = "${aws_security_group.default.id}"
-//}
-
-

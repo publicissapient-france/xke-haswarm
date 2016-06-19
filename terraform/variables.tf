@@ -5,9 +5,8 @@ variable "master_count" {
 
 variable "node_count" {
   type = "string"
-  default = "7"
+  default = "5"
 }
-
 
 variable "aws_region" {
   type = "string"
@@ -38,5 +37,13 @@ variable "vpc_id" {
 }
 
 variable "private_subnet" {
+  type = "string"
+}
+
+variable "zone_id" {
+  type = "string"
+}
+
+variable "owner" {
   type = "string"
 }

@@ -48,8 +48,6 @@ resource "aws_elb" "admin" {
     "${aws_instance.master.*.id}"]
 }
 
-
-
 resource "aws_elb" "https" {
   name = "${var.project}-lb-https"
   # The same availability zone as our instance
@@ -65,10 +63,18 @@ resource "aws_elb" "https" {
     "${aws_instance.master.*.id}"]
 }
 
-resource "aws_route53_record" "lb-record" {
-    name = "swarm.aws.xebiatechevent.info"
-    zone_id = "Z28O5PDK1WPCSR"
+resource "aws_route53_record" "lb-record-admin" {
+    name = "admin.xke-ha-swarm.aws.xebiatechevent.info"
+    zone_id = "${var.zone_id}"
     type = "CNAME"
     records = ["${aws_elb.admin.dns_name}"]
     ttl = "1"
+}
+
+resource "aws_route53_record" "lb-record-service" {
+  name = "*.service.xke-ha-swarm.aws.xebiatechevent.info"
+  zone_id = "${var.zone_id}"
+  type = "CNAME"
+  records = ["${aws_elb.https.dns_name}"]
+  ttl = "1"
 }
