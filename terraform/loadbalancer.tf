@@ -52,7 +52,7 @@ resource "aws_elb" "https" {
   name = "${var.project}-lb-https"
   # The same availability zone as our instance
   availability_zones = [
-    "${element(aws_instance.master.*.availability_zone, count.index)}"]
+    "${element(aws_instance.node.*.availability_zone, count.index)}"]
   listener {
     instance_port = 80
     instance_protocol = "http"
@@ -60,7 +60,7 @@ resource "aws_elb" "https" {
     lb_protocol = "http"
   }
   instances = [
-    "${aws_instance.master.*.id}"]
+    "${aws_instance.node.*.id}"]
 }
 
 resource "aws_route53_record" "lb-record-admin" {
@@ -71,7 +71,7 @@ resource "aws_route53_record" "lb-record-admin" {
     ttl = "1"
 }
 
-resource "aws_route53_record" "lb-record-service" {
+resource "aws_route53_record" "lb-record-https" {
   name = "*.service.xke-ha-swarm.aws.xebiatechevent.info"
   zone_id = "${var.zone_id}"
   type = "CNAME"
