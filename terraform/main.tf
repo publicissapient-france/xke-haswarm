@@ -16,7 +16,7 @@ resource "aws_subnet" "default" {
 # Security group
 resource "aws_key_pair" "default" {
   key_name = "${var.key_name}"
-  public_key = "${file("xke-ha-swarm.pub")}"
+  public_key = "${file("${var.key_name}.pub")}"
 }
 
 resource "aws_instance" "master" {
@@ -40,7 +40,7 @@ resource "aws_instance" "master" {
 
 resource "aws_route53_record" "master-record" {
   count = "${var.master_count}"
-  name = "master${count.index + 1}.xke-ha-swarm.aws.xebiatechevent.info"
+  name = "master${count.index + 1}.${var.domain_name}"
   zone_id = "${var.zone_id}"
   type = "CNAME"
   records = ["${element(aws_instance.master.*.public_ip, count.index)}"]
@@ -64,7 +64,7 @@ resource "aws_instance" "node" {
 
 resource "aws_route53_record" "slave-record" {
   count = "${var.node_count}"
-  name = "node${count.index + 1}.xke-ha-swarm.aws.xebiatechevent.info"
+  name = "node${count.index + 1}.${var.domain_name}"
   zone_id = "${var.zone_id}"
   type = "CNAME"
   records = ["${element(aws_instance.node.*.public_ip, count.index)}"]

@@ -64,7 +64,7 @@ resource "aws_elb" "https" {
 }
 
 resource "aws_route53_record" "lb-record-admin" {
-    name = "admin.xke-ha-swarm.aws.xebiatechevent.info"
+    name = "admin.${var.domain_name}"
     zone_id = "${var.zone_id}"
     type = "CNAME"
     records = ["${aws_elb.admin.dns_name}"]
@@ -72,7 +72,7 @@ resource "aws_route53_record" "lb-record-admin" {
 }
 
 resource "aws_route53_record" "lb-record-https" {
-  name = "*.service.xke-ha-swarm.aws.xebiatechevent.info"
+  name = "*.service.${var.domain_name}"
   zone_id = "${var.zone_id}"
   type = "CNAME"
   records = ["${aws_elb.https.dns_name}"]

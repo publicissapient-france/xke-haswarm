@@ -32,6 +32,11 @@ variable "project" {
   default = "xke-ha-swarm"
 }
 
+variable "domain_name" {
+  type = "string"
+  default = "xke-ha-swarm.aws.xebiatechevent.info"
+}
+
 variable "vpc_id" {
   type = "string"
 }
