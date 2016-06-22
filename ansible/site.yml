@@ -14,7 +14,6 @@
   roles:
   - { role: docker }
 
-
 - hosts: master
   remote_user: ubuntu
   tasks:
@@ -38,6 +37,8 @@
       network_mode: host
 
 - hosts: node
+  vars_files:
+    - variables.yml
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -62,22 +63,22 @@
     become_user: root
     docker_container:
       name: interlock
-      image: "ehazlett/interlock:master"
+      image: "ehazlett/interlock:1.2.0"
       pull: yes
       command: [ '-D' , 'run' , '-c' , '/etc/interlock/config.toml' ]
       env:
         INTERLOCK_CONFIG: |
             ListenAddr = ":8080"
-            DockerURL = "tcp://{{ private_ip }}:3375"
+            DockerURL = "{{ docker_endpoint }}"
 
             [[Extensions]]
-            Name = "haproxy"
+            Name = "nginx"
+            ConfigPath= "/etc/nginx/nginx.conf"
+            PidPath = "/var/run/nginx.pid"
             TemplatePath = ""
-            ConfigPath= "/usr/local/etc/haproxy/haproxy.cfg"
-            PidPath = "/var/run/haproxy.pid"
-            BackendOverrideAddress = "172.17.0.1"
             MaxConn = 1024
             Port = 80
+            NginxPlusEnabled = true
       ports:
         - 8080
       volumes:
@@ -85,31 +86,25 @@
       tty: yes
       state: started
 
-
-  - name: Create an haproxy container
+  - name: Create an nginx container
     become: yes
     become_user: root
     docker_container:
-      name: haproxy
-      image: haproxy:latest
+      name: nginx
+      image: nginx:latest
+      entrypoint: ['nginx']
+      command: ['-g', 'daemon off;', '-c', '/etc/nginx/nginx.conf']
       ports:
         - 80:80
       labels:
-        "interlock.ext.name": haproxy
-      state: started
-      pull: yes
-      recreate: yes
+        "interlock.ext.name": nginx
       links:
         - interlock:interlock
+      state: started
+      pull: yes
 
   handlers:
   - name: reload systemd
     command: systemctl daemon-reload
   - name: restart docker
     service: name=docker state=restarted
-
-#  roles:
-#  - { role: docker }
-#
-#- hosts: node
-#  remote_user: ubuntu

@@ -1,0 +1,3 @@
+---
+
+docker_endpoint: tcp://admin.xke-ha-swarm.aws.xebiatechevent.info:3375
