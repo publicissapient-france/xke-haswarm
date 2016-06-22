@@ -18,18 +18,13 @@ const initialState = {
 
 var ringSize = (1000 / constants.RING_RESOLUTION);
 function serviceReducer(state = defaultService, action, ringOffset) {
-    var newRing;
     switch (action.type) {
         case actions.SERVICE_HIT:
             var assign = Object.assign({}, state, {
-                hostname: action.hostname,
-                filename: action.filename,
-                name: action.name,
                 countBuffer: state.countBuffer + 1
             });
             return assign;
         case actions.SERVICE_RECEIVED:
-
             return Object.assign({}, state, {
                 hostname: action.hostname,
                 filename: action.identity.filename,

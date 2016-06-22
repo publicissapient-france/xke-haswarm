@@ -22,10 +22,11 @@ type Identity struct {
 }
 
 type Service struct {
-	Hostname   string    `json:"hostname"`
-	Domainname string    `json:"domainname"`
-	Url        string    `json:"url"`
-	Identity   *Identity `json:"identity"`
+	ContainerId string    `json:"containerId"`
+	Domainname  string    `json:"domainname"`
+	Url         string    `json:"url"`
+	Identity    *Identity `json:"identity"`
+	Hostname    string    `json:"hostname"`
 }
 
 func getContainer(id string) (*docker.Container, error) {
@@ -51,11 +52,7 @@ func listServices() ([]*Service, error) {
 		return nil, err
 	}
 
-	containerList, err := client.ListContainers(docker.ListContainersOptions{
-		Filters: map[string][]string{
-			"ancestor":  {"xebiafrance/identity"},
-		},
-	})
+	containerList, err := client.ListContainers(docker.ListContainersOptions{})
 
 	if err != nil {
 		return nil, err
@@ -70,15 +67,31 @@ func listServices() ([]*Service, error) {
 			return nil, err
 		}
 
-		hostname := container.Config.Hostname
-		Domainname := container.Config.Domainname
-		url := "http://" + hostname + "." + Domainname + "/identity"
+		if (container.Config.Image != "xebiafrance/identity") {
+			continue
+		}
+
+		service := Service{}
+
+		service.ContainerId = container.Config.Hostname
+
+		for key, value := range container.Config.Labels {
+			switch key {
+			case "interlock.hostname":
+				service.Hostname = value
+			case "interlock.domain":
+				service.Domainname = value
+			}
+
+		}
+
+		service.Url = "http://" + service.Hostname + "." + service.Domainname + "/identity"
 
 		identity := Identity{}
 
 		for _, env := range container.Config.Env {
 			envAsArray := strings.Split(env, "=")
-			
+
 			key := envAsArray[0]
 			value := envAsArray[1]
 
@@ -92,7 +105,9 @@ func listServices() ([]*Service, error) {
 			}
 		}
 
-		services = append(services, &Service{hostname, Domainname, url, &identity})
+		service.Identity = &identity
+
+		services = append(services, &service)
 	}
 
 	return services, nil
