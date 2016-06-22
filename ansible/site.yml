@@ -64,7 +64,6 @@
     docker_container:
       name: interlock
       image: "ehazlett/interlock:1.2.0"
-      pull: yes
       command: [ '-D' , 'run' , '-c' , '/etc/interlock/config.toml' ]
       env:
         INTERLOCK_CONFIG: |
@@ -101,7 +100,6 @@
       links:
         - interlock:interlock
       state: started
-      pull: yes
 
   handlers:
   - name: reload systemd
