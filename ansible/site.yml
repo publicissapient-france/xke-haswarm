@@ -77,7 +77,6 @@
             TemplatePath = ""
             MaxConn = 1024
             Port = 80
-            NginxPlusEnabled = true
       ports:
         - 8080
       volumes:
