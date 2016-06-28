@@ -1,13 +1,21 @@
-# xke-haswarm
+# XKE HA Swarm
 
-## Start on localhost
+## Provision infrastructure
 
+```shell
+$ make provision
 ```
-IP=127.0.0.1 docker-compose up -d
+
+## Run Application
+
+Configure your `DOCKER_HOST` environment variable to point to your Swarm cluster
+
+```shell
+$ export DOCKER_HOST=tcp://admin.xke-ha-swarm.aws.xebiatechevent.info:3375
 ```
 
-## Services
+Then run the application
 
-We use xip.io to resolv testing dns
-
-- Monitor: http://monitor.127.0.0.1.xip.io
+```shell
+$ docker-compose up -d
+```
