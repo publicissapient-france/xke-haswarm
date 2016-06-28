@@ -348,3 +348,17 @@ services:
       - redis
     ports:
       - 8080
+
+  fthouny:
+    image: xebiafrance/identity
+    environment:
+        NAME: Fabien Thouny
+        FILENAME: Fabien-Thouny.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/05/Fabien-Thouny.png
+    labels:
+      - "interlock.hostname=fthouny"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
