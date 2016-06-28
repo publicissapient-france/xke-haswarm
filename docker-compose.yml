@@ -26,3 +26,325 @@ services:
       - 8080
     environment:
         DOCKER_HOST: tcp://admin.xke-ha-swarm.aws.xebiatechevent.info:3375
+
+  jlmorlhon:
+    image: xebiafrance/identity
+    environment:
+        NAME: Jean-Laurent De Morlhon
+        FILENAME: Jean-Laurent-de-Morlhon.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Jean-Laurent-de-Morlhon.png
+    labels:
+      - "interlock.hostname=jlmorlhon"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  amoussinepouchkine:
+    image: xebiafrance/identity
+    environment:
+        NAME: Alexis Moussine-Pouchkine
+        FILENAME: Moussine-Pouchkine.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Moussine-Pouchkine.png
+    labels:
+      - "interlock.hostname=amoussinepouchkine"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  jsimon:
+    image: xebiafrance/identity
+    environment:
+        NAME: Julien Simon
+        FILENAME: Julien-Simon-AWS.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Julien-Simon-AWS.png
+    labels:
+      - "interlock.hostname=jsimon"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  ndeloof:
+    image: xebiafrance/identity
+    environment:
+        NAME: Nicolas De Loof
+        FILENAME: Nicolas-de-loof-1.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Nicolas-de-loof-1.png
+    labels:
+      - "interlock.hostname=ndeloof"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  whoffmann:
+    image: xebiafrance/identity
+    environment:
+        NAME: William Hoffmann
+        FILENAME: William-Hoffmann.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/William-Hoffmann.png
+    labels:
+      - "interlock.hostname=whoffmann"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  jboulle:
+    image: xebiafrance/identity
+    environment:
+        NAME: Jonathan Boulle
+        FILENAME: Jonathan-Boulle.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/06/Jonathan-Boulle.png
+    labels:
+      - "interlock.hostname=jboulle"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  arukletsov:
+    image: xebiafrance/identity
+    environment:
+        NAME: Alex Rukletsov
+        FILENAME: Alex-Rukletsov-1.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2015/06/Alex-Rukletsov-1.png
+    labels:
+      - "interlock.hostname=arukletsov"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  fscholten:
+    image: xebiafrance/identity
+    environment:
+        NAME: Frank Scholten
+        FILENAME: frank_scholten.jpg
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/frank_scholten.jpg
+    labels:
+      - "interlock.hostname=fscholten"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  pnorman:
+    image: xebiafrance/identity
+    environment:
+        NAME: Philip Norman
+        FILENAME: philip-norman-mesosphere.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/philip-norman-mesosphere.png
+    labels:
+      - "interlock.hostname=pnorman"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  jcorioland:
+    image: xebiafrance/identity
+    environment:
+        NAME: Julien Corioland
+        FILENAME: Julien-corioland-Microsoft.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Julien-corioland-Microsoft.png
+    labels:
+      - "interlock.hostname=jcorioland"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  nmuller:
+    image: xebiafrance/identity
+    environment:
+        NAME: Nicolas Muller
+        FILENAME: Nicolas-Muller-Treeptik.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Nicolas-Muller-Treeptik.png
+    labels:
+      - "interlock.hostname=nmuller"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  jlrigau:
+    image: xebiafrance/identity
+    environment:
+        NAME: Jean-Louis Rigau
+        FILENAME: Jean-Louis-Rigau.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Louis-Rigau.png
+    labels:
+      - "interlock.hostname=jlrigau"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  tauffredou:
+    image: xebiafrance/identity
+    environment:
+        NAME: Thomas Auffredou
+        FILENAME: Thomas-Auffredou-Xebia-09.58.25.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Thomas-Auffredou-Xebia-09.58.25.png
+    labels:
+      - "interlock.hostname=tauffredou"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  bmoussaud:
+    image: xebiafrance/identity
+    environment:
+        NAME: Benoît Moussaud
+        FILENAME: Benoit-Moussaud.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Benoit-Moussaud.png
+    labels:
+      - "interlock.hostname=bmoussaud"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  aletaxin:
+    image: xebiafrance/identity
+    environment:
+        NAME: Antoine Le Taxin
+        FILENAME: Antoine-LeTaxin.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Antoine-LeTaxin.png
+    labels:
+      - "interlock.hostname=aletaxin"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  jpthiery:
+    image: xebiafrance/identity
+    environment:
+        NAME: Jean-Pascal Thiery
+        FILENAME: Jean-Pascal-Thiery.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Jean-Pascal-Thiery.png
+    labels:
+      - "interlock.hostname=jpthiery"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  chauber:
+    image: xebiafrance/identity
+    environment:
+        NAME: Cedric Hauber
+        FILENAME: Cedric-hauber.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Cedric-hauber.png
+    labels:
+      - "interlock.hostname=chauber"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  akinsella:
+    image: xebiafrance/identity
+    environment:
+        NAME: Alexis Kinsella
+        FILENAME: Alexis-Kinsella-3.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Alexis-Kinsella-3.png
+    labels:
+      - "interlock.hostname=akinsella"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  gegron:
+    image: xebiafrance/identity
+    environment:
+        NAME: Gérôme Egron
+        FILENAME: Gerome-egron-xebia.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/04/Gerome-egron-xebia.png
+    labels:
+      - "interlock.hostname=gegron"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  mhubert:
+    image: xebiafrance/identity
+    environment:
+        NAME: Michel Hubert
+        FILENAME: Michel-hubert-photo.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/05/Michel-hubert-photo.png
+    labels:
+      - "interlock.hostname=mhubert"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  cmeudec:
+    image: xebiafrance/identity
+    environment:
+        NAME: Christophe Meudec
+        FILENAME: Christophe-meudec-younited-credit.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/05/Christophe-meudec-younited-credit.png
+    labels:
+      - "interlock.hostname=cmeudec"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  ylambret:
+    image: xebiafrance/identity
+    environment:
+        NAME: Yann Lambret
+        FILENAME: Yann-Lambret.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/05/Yann-Lambret.png
+    labels:
+      - "interlock.hostname=ylambret"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
+
+  mparisot:
+    image: xebiafrance/identity
+    environment:
+        NAME: Matthieu Parisot
+        FILENAME: Matthieu-Parisot.png
+        URL: http://paris-container-day.xebia.fr/wp-content/uploads/2016/05/Matthieu-Parisot.png
+    labels:
+      - "interlock.hostname=mparisot"
+      - "interlock.domain=service.xke-ha-swarm.aws.xebiatechevent.info"
+    depends_on:
+      - redis
+    ports:
+      - 8080
