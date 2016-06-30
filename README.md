@@ -19,3 +19,9 @@ Then run the application
 ```shell
 $ docker-compose up -d
 ```
+
+## Destroy infrastructure
+
+```shell
+$ make destroy
+```

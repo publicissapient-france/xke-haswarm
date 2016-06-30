@@ -19,7 +19,7 @@ launch-infra: check-env
     				-e AWS_REGION -e AWS_PRIVATE_KEY=/key.pem \
     				-v ${AWS_PRIVATE_KEY}:/key.pem \
     				-v ${CWD}/terraform:/data \
-    				uzyexe/terraform apply --input=false
+    				uzyexe/terraform apply
 
 terraform-to-ansible:
 	docker run --rm -v $(CWD)/terraform:/terraform \
@@ -33,4 +33,11 @@ configure: check-env
     				xebiafrance/ansible ansible-playbook -v -i "inventory" --private-key="/key.pem" "site.yml"
 
 provision: launch-infra terraform-to-ansible configure
+
+destroy: check-env
+	docker run --rm -e AWS_ACCESS_KEY -e AWS_SECRET_KEY \
+    				-e AWS_REGION -e AWS_PRIVATE_KEY=/key.pem \
+    				-v ${AWS_PRIVATE_KEY}:/key.pem \
+    				-v ${CWD}/terraform:/data \
+    				uzyexe/terraform destroy -force
 
